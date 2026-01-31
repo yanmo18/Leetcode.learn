@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /**
+         * @param {string} s
+         * @return {number}
+         */
+        const lengthOfLongestSubstring=function(s){ 
+            // 1.哈希表：键=字符，值=字符出现的下标
+            const charMap={}
+            let left=0
+            let max=0
+            for(let right=0;right<s.length;right++){
+                let charnum=s[right]
+                // 2.判断字符是否在哈希表中+当前下标在大于left,收缩
+                if(charMap[charnum]!=undefined && charMap[charnum]>=left){
+                    left=charMap[charnum]+1
+                }
+                // 3.不在，更新哈希表，记录当前字符的最新下标
+                charMap[charnum]=right
+                // 4.更新最大长度，right(2)-left(1)+1=2
+                max=Math.max(max,right-left+1)
+            }
+            return max
+
+        }
+        // 测试用例（覆盖常规/边界场景）
+console.log(lengthOfLongestSubstring("abcabcbb")); // 3（abc）
+console.log(lengthOfLongestSubstring("bbbbb"));    // 1（b）
+console.log(lengthOfLongestSubstring("pwwkew"));   // 3（wke）
+console.log(lengthOfLongestSubstring("abba"));     // 2（ab/ba）
+console.log(lengthOfLongestSubstring(""));         // 0（空字符串）
+    </script>
+</body>
+</html>
