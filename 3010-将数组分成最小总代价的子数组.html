@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<scr>
+    <script>
+/**
+ * @param {number[]}nums
+ * @return {number}
+ */
+// 遍历解法
+const minimumCost=function(nums){
+// 第一子数组代价固定
+const first=nums[0]
+// 去除第一个元素
+// 候选子数组
+const candidates=nums.slice(1)
+// (a,b)=>a-b 升序
+// (a,b)=>b-a 降序
+candidates.sort((a,b)=>a-b)
+let total=0
+total=first+candidates[0]+candidates[1]
+return total
+}
+// 测试
+const nums=[1,6,5,2]
+console.log(minimumCost(nums)) // 1+2+5=8
+</script>
+</body>
+</html>
