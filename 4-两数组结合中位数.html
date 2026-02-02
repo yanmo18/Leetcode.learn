@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const findMedianSortedArrays = function(nums1, nums2) {
+    // 1. 确保nums1是更短的数组，减少二分次数（核心优化）
+    if (nums1.length > nums2.length) {
+        [nums1, nums2] = [nums2, nums1];
+    }
+
+    // 2. 定义核心变量
+    const m = nums1.length;    // 短数组长度
+    const n = nums2.length;    // 长数组长度
+    let left = 0;              // 二分左边界（nums1左半最少取0个）
+    let right = m;             // 二分右边界（nums1左半最多取m个）
+    const totalLen = m + n;    // 两个数组总长度
+    const leftTotalLen = Math.ceil(totalLen / 2); // 左半总长度（向上取整，核心）
+
+    // 3. 二分查找合法分割点（循环条件：left ≤ right，避免遗漏）
+    while (left <= right) {
+        // 3.1 计算nums1的分割点i（向上取整，满足你的要求）
+        const i = Math.ceil((left + right) / 2);
+        // 3.2 计算nums2的分割点j（左半总长度 - nums1左半长度）
+        const j = leftTotalLen - i;
+
+        // 4. 处理边界值（防止数组越界，必写！）
+        // nums1左半最大值：i=0时左半为空，用-∞；否则取nums1[i-1]
+        const maxLeft1 = i === 0 ? -Infinity : nums1[i - 1];
+        // nums1右半最小值：i=m时右半为空，用+∞；否则取nums1[i]
+        const minRight1 = i === m ? Infinity : nums1[i];
+        // nums2左半最大值：j=0时左半为空，用-∞；否则取nums2[j-1]
+        const maxLeft2 = j === 0 ? -Infinity : nums2[j - 1];
+        // nums2右半最小值：j=n时右半为空，用+∞；否则取nums2[j]
+        const minRight2 = j === n ? Infinity : nums2[j];
+
+        // 5. 判断分割是否合法（左半所有数 ≤ 右半所有数）
+        if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1) {
+            // 5.1 总长度奇数：中位数=左半最大值
+            if (totalLen % 2 === 1) {
+                return Math.max(maxLeft1, maxLeft2);
+            } 
+            // 5.2 总长度偶数：中位数=(左半最大值 + 右半最小值)/2
+            else {
+                return (Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2;
+            }
+        } 
+        //  6. 分割不合法：调整边界（核心逻辑，避免死循环）
+         else if (maxLeft1 > minRight2) {
+             // nums1左半太大，分割点左移（缩小右边界）
+             right = i - 1;
+         } 
+         else {
+             // nums1左半太小，分割点右移（扩大左边界）
+            left = i + 1;
+         }
+    }
+
+    // 7. 兜底返回（理论上输入是有序数组，不会执行到这里）
+    return 0;
+};
+
+// 测试用例
+console.log(findMedianSortedArrays([1, 2], [3, 4]));
+console.log(findMedianSortedArrays([1, 2], [3, 4, 5]));
+
+    </script>
+</body>
+</html>
